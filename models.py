@@ -10,10 +10,22 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    #profile_picture = db.Column(db.String(255), nullable=True)  # stores filename
-    #bio = db.Column(db.String(200), nullable=True)              # short bio
+    role = db.Column(db.String(50), nullable=True)
 
-    contact_messages = db.relationship('ContactMessage', backref='user', lazy=True)
+    contact_messages = db.relationship(
+        'ContactMessage',
+        backref='user',
+        lazy=True,
+        foreign_keys='ContactMessage.user_id'
+    )
+
+    replies_sent = db.relationship(
+        'ContactMessage',
+        back_populates='replier',
+        foreign_keys='ContactMessage.replied_by'
+)
+
+
 
 
 class Case(db.Model):
@@ -63,9 +75,24 @@ class Document(db.Model):
     case_id = db.Column(db.Integer, db.ForeignKey('casess.id'), nullable=False)
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+'''
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     message = db.Column(db.Text, nullable=False)
     submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reply = db.Column(db.Text, nullable=True)
+    replied_at = db.Column(db.DateTime, nullable=True)
+
+'''
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reply = db.Column(db.Text, nullable=True)
+    replied_at = db.Column(db.DateTime, nullable=True)
+    replied_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    replier = db.relationship('User', foreign_keys=[replied_by])
 

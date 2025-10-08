@@ -358,6 +358,7 @@ def export_pdf():
     output = BytesIO(pdf_bytes)
     return send_file(output, download_name="cases_report.pdf", as_attachment=True)
 
+'''
 @app.route('/admin/messages')
 @login_required
 def admin_messages():
@@ -379,6 +380,43 @@ def reply_to_message(message_id):
     db.session.commit()
     flash('Reply sent successfully', 'success')
     return redirect(url_for('admin_messages'))
+'''
+
+from sqlalchemy import case
+
+@app.route('/admin/messages')
+@login_required
+def admin_messages():
+    if current_user.role != 'admin':
+        abort(403)
+
+    messages = ContactMessage.query.order_by(
+        case((ContactMessage.reply == None, 1), else_=0).desc(),
+        ContactMessage.submitted_at.desc()
+    ).all()
+
+    return render_template('admin_messages.html', messages=messages)
+
+
+
+@app.route('/admin/reply/<int:msg_id>', methods=['POST'])
+@login_required
+def reply_message(msg_id):
+    if current_user.role != 'admin':
+        abort(403)
+
+    msg = ContactMessage.query.get_or_404(msg_id)
+    reply_text = request.form.get('reply')
+
+    if reply_text:
+        msg.reply = reply_text
+        msg.replied_at = datetime.utcnow()
+        msg.replied_by = current_user.id
+        db.session.commit()
+        flash('Reply sent successfully.', 'success')
+
+    return redirect(url_for('admin_messages'))
+
 
 
 @app.route('/export/excel')
@@ -404,6 +442,65 @@ def export_excel():
     output.seek(0)
     return send_file(output, download_name="cases_report.xlsx", as_attachment=True)
 
+@app.route('/admin/delete/<int:msg_id>', methods=['POST'])
+@login_required
+def delete_single_message(msg_id):
+    if current_user.role != 'admin':
+        abort(403)
+
+    msg = ContactMessage.query.get_or_404(msg_id)
+    db.session.delete(msg)
+    db.session.commit()
+    flash('Message deleted successfully.', 'info')
+    return redirect(url_for('admin_messages'))
+
+
+@app.route('/admin/delete-multiple', methods=['POST'])
+@login_required
+def delete_messages():
+    if current_user.role != 'admin':
+        abort(403)
+
+    ids = request.form.getlist('delete_ids')
+    if ids:
+        for msg_id in ids:
+            msg = ContactMessage.query.get(msg_id)
+            if msg:
+                db.session.delete(msg)
+        db.session.commit()
+        flash(f'{len(ids)} message(s) deleted.', 'info')
+    else:
+        flash('No messages selected.', 'warning')
+
+    return redirect(url_for('admin_messages'))
+
+@app.route('/dashboard/delete/<int:msg_id>', methods=['POST'])
+@login_required
+def delete_user_message(msg_id):
+    msg = ContactMessage.query.get_or_404(msg_id)
+    if msg.user_id != current_user.id:
+        abort(403)
+
+    db.session.delete(msg)
+    db.session.commit()
+    flash('Message deleted successfully.', 'info')
+    return redirect(url_for('dashboard'))
+
+@app.route('/dashboard/delete-multiple', methods=['POST'])
+@login_required
+def delete_user_messages():
+    ids = request.form.getlist('delete_ids')
+    if ids:
+        for msg_id in ids:
+            msg = ContactMessage.query.get(msg_id)
+            if msg and msg.user_id == current_user.id:
+                db.session.delete(msg)
+        db.session.commit()
+        flash(f'{len(ids)} message(s) deleted.', 'info')
+    else:
+        flash('No messages selected.', 'warning')
+
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':

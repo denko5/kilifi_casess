@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kilifi Legal Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-size: 1rem;
+    }
+    @media (max-width: 576px) {
+      body {
+        font-size: 1.05rem;
+      }
+    }
+    .card-summary {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  {% include 'navbar.html' %}
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white mt-auto pt-3 pb-2 small" style="font-size: 0.85rem;">
+    <div class="container">
+      <div class="row gy-2 text-center text-md-start">
+        <!-- Legal Support -->
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Legal Support</h6>
+          <p class="mb-1">📞 Advice Line: +254 700 111 222</p>
+          <p class="mb-1">📧 Email: legal@kilifilegal.com</p>
+        </div>
+
+        <!-- IT Support -->
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Technical Support</h6>
+          <p class="mb-1">📞 Helpdesk: +254 700 333 444</p>
+          <p class="mb-1">📧 Email: support@kilifilegal.com</p>
+        </div>
+
+        <!-- Location -->
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Office Location</h6>
+          <p class="mb-1">📍 Kilifi Plaza, 3rd Floor</p>
+          <p class="mb-1">Beside Equity Bank, Kilifi Town</p>
+          <p class="mb-1">County Attorney's Office</p>
+        </div>
+      </div>
+
+      <hr class="border-light my-3">
+
+      <div class="row text-center">
+        <div class="col-12">
+          <p class="mb-1">&copy; 2025 Kilifi Legal Portal. All rights reserved.</p>
+          <p>
+            <a href="#" class="text-white text-decoration-none me-2">Privacy Policy</a> |
+            <a href="#" class="text-white text-decoration-none ms-2">Terms of Service</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
