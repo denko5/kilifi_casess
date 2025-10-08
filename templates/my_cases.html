@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Cases - Kilifi Legal Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-size: 1rem;
+      background-color: #f8f9fa;
+    }
+    @media (max-width: 576px) {
+      body {
+        font-size: 1.05rem;
+      }
+    }
+    .timeline {
+      border-left: 3px solid #0d6efd;
+      padding-left: 1rem;
+      margin-top: 1rem;
+    }
+    .timeline-entry {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    .timeline-entry i {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+    .timeline-entry time {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-left: 0.25rem;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">Kilifi Legal Portal</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('my_cases') }}">My Cases</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('documents') }}">Documents</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="container mt-4 text-center">
+    <h2 class="fs-3">My Filed Cases</h2>
+    <p class="text-muted fs-6">View, filter, and manage your legal cases</p>
+    <a href="{{ url_for('add_case') }}" class="btn btn-success">Add New Case</a>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="container mt-3">
+    <form method="GET" class="row g-2">
+      <div class="col-12 col-md-2"><input type="text" name="search" class="form-control" placeholder="Case Number"></div>
+      <div class="col-12 col-md-2">
+        <select name="status" class="form-select">
+          <option value="">All Statuses</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Paused">Paused</option>
+          <option value="Resumed">Resumed</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2"><input type="text" name="handled_by" class="form-control" placeholder="Handled By"></div>
+      <div class="col-12 col-md-2"><input type="text" name="parties" class="form-control" placeholder="Parties"></div>
+      <div class="col-12 col-md-2"><input type="text" name="case_type" class="form-control" placeholder="Case Type"></div>
+      <div class="col-12 col-md-2"><input type="text" name="department" class="form-control" placeholder="Department"></div>
+      <div class="col-12 col-md-3"><input type="date" name="date_filed" class="form-control" placeholder="Date Filed"></div>
+      <div class="col-12 col-md-3"><button type="submit" class="btn btn-outline-primary w-100">Filter</button></div>
+    </form>
+    <div class="row mt-3 g-2">
+      <div class="col-12 col-md-3"><a href="{{ url_for('export_pdf') }}" class="btn btn-outline-danger w-100">Export PDF</a></div>
+      <div class="col-12 col-md-3"><a href="{{ url_for('export_excel') }}" class="btn btn-outline-success w-100">Export Excel</a></div>
+    </div>
+  </div>
+
+  <!-- Cases Table -->
+  <div class="container mt-4">
+    {% if cases %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Case Number</th>
+            <th>Type</th>
+            <th>Parties</th>
+            <th>Date Opened</th>
+            <th>Status</th>
+            <th>Handled By</th>
+            <th>Department</th>
+            <th>Descriptions</th>
+            <th>Records</th>
+            <th>Closed</th>
+            <th>Paused</th>
+            <th>Resumed</th>
+            <th>Documents</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for case in cases %}
+          <tr>
+            <td>{{ case.case_number }}</td>
+            <td>{{ case.case_type }}</td>
+            <td>{{ case.parties }}</td>
+            <td>{{ case.date_filed.strftime('%Y-%m-%d') }}</td>
+            <td><span class="badge bg-{{ 'success' if case.status == 'Closed' else 'warning' if case.status == 'Paused' else 'info' }}">{{ case.status }}</span></td>
+            <td>{{ case.handled_by }}</td>
+            <td>{{ case.department }}</td>
+            <td>{{ case.descriptions }}</td>
+            <td>{{ case.records }}</td>
+            <td>{{ case.date_closed.strftime('%Y-%m-%d') if case.date_closed else '—' }}</td>
+            <td>{{ case.date_paused.strftime('%Y-%m-%d') if case.date_paused else '—' }}</td>
+            <td>{{ case.date_resumed.strftime('%Y-%m-%d') if case.date_resumed else '—' }}</td>
+            <td style="min-width: 300px;">
+              <form method="POST" action="{{ url_for('upload_document', case_id=case.id) }}" enctype="multipart/form-data">
+                <div class="row g-2">
+                  <div class="col-12 col-lg-8">
+                    <input type="file" name="file" class="form-control form-control-sm" required>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <button type="submit" class="btn btn-sm btn-primary w-100">Upload</button>
+                  </div>
+                </div>
+              </form>
+            </td>
+
+
+            <td><a href="{{ url_for('edit_case', case_id=case.id) }}" class="btn btn-sm btn-warning">Edit</a></td>
+          </tr>
+          <tr>
+            <td colspan="14">
+              <div class="timeline">
+                <div class="timeline-entry">
+                  <i class="bi bi-calendar-plus text-primary"></i>
+                  <strong>Filed:</strong> <time>{{ case.date_filed.strftime('%Y-%m-%d') }}</time>
+                </div>
+                {% if case.date_paused %}
+                <div class="timeline-entry">
+                  <i class="bi bi-pause-circle text-warning"></i>
+                  <strong>Paused:</strong> <time>{{ case.date_paused.strftime('%Y-%m-%d') }}</time>
+                </div>
+                {% endif %}
+                {% if case.date_resumed %}
+                <div class="timeline-entry">
+                  <i class="bi bi-play-circle text-success"></i>
+                  <strong>Resumed:</strong> <time>{{ case.date_resumed.strftime('%Y-%m-%d') }}</time>
+                </div>
+                {% endif %}
+                {% if case.date_closed %}
+                <div class="timeline-entry">
+                  <i class="bi bi-check-circle text-danger"></i>
+                  <strong>Closed:</strong> <time>{{ case.date_closed.strftime('%Y-%m-%d') }}</time>
+                </div>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+     </div>
+    {% else %}
+    <div class="alert alert-info text-center">No cases have been filed yet.</div>
+    {% endif %}
+  </div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white mt-auto pt-3 pb-2 small" style="font-size: 0.85rem;">
+  <div class="container">
+    <div class="row gy-2 text-center text-md-start">
+      <!-- Legal Support -->
+      <div class="col-12 col-md-4">
+        <h6 class="text-uppercase fw-bold mb-2">Legal Support</h6>
+        <p class="mb-1">📞 Advice Line: +254 700 111 222</p>
+        <p class="mb-1">📧 Email: legal@kilifilegal.com</p>
+      </div>
+
+      <!-- IT Support -->
+      <div class="col-12 col-md-4">
+        <h6 class="text-uppercase fw-bold mb-2">Technical Support</h6>
+        <p class="mb-1">📞 Helpdesk: +254 700 333 444</p>
+        <p class="mb-1">📧 Email: support@kilifilegal.com</p>
+      </div>
+
+      <!-- Location -->
+      <div class="col-12 col-md-4">
+        <h6 class="text-uppercase fw-bold mb-2">Office Location</h6>
+        <p class="mb-1">📍 Kilifi Plaza, 3rd Floor</p>
+        <p class="mb-1">Beside Equity Bank, Kilifi Town</p>
+        <p class="mb-1">County Attorney's Office</p>
+      </div>
+    </div>
+
+    <hr class="border-light my-3">
+
+    <div class="row text-center">
+      <div class="col-12">
+        <p class="mb-1">&copy; 2025 Kilifi Legal Portal. All rights reserved.</p>
+        <p>
+          <a href="#" class="text-white text-decoration-none me-2">Privacy Policy</a> |
+          <a href="#" class="text-white text-decoration-none ms-2">Terms of Service</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
