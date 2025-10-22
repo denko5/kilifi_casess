@@ -35,17 +35,26 @@ import pandas as pd
 # SQLAlchemy Models
 from models import db, User, Case, Document, ContactMessage
 
+
 import pymysql
 pymysql.install_as_MySQLdb()
 
 
 # Initialize Flask app
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_strong_secret_key'
+# app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'your_strong_secret_key'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/kilifi_casess'
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace('mysql://root:EqKeTBDdQnjMkXhwMSxBhJYnLLxFcrGR@mysql.railway.internal:3306/railway', 'mysql+pymysql://root:password@localhost/kilifi_casess')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace('mysql://', 'mysql+pymysql://')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+# Initialize Flask app
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_strong_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace('mysql://', 'mysql+pymysql://')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 # File upload config
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
@@ -59,6 +68,9 @@ migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+with app.app_context():
+    db.create_all()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
