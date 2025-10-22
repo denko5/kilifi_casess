@@ -6,54 +6,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
   <style>
     body {
-      font-size: 1rem;
       background-color: #f8f9fa;
+      font-size: 1rem;
     }
-    @media (max-width: 576px) {
-      body {
-        font-size: 1.05rem;
-      }
+
+    /* Navbar Styling */
+    .navbar {
+      background-color: #0d3c75 !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
+
+    .navbar-brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 8px;
+      border: 2px solid #fff;
+    }
+
+    .nav-link {
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffc107 !important;
+    }
+
+    /* Page Header */
+    .page-header {
+      background-color: #e9f1ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Filters */
+    .form-control, .form-select {
+      border-radius: 10px;
+    }
+
+    .btn {
+      border-radius: 10px;
+    }
+
+    /* Tables */
+    .table {
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: white;
+    }
+
+    .table thead {
+      background-color: #0d3c75;
+      color: white;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #e9f1ff;
+      transition: background-color 0.3s ease;
+    }
+
     .timeline {
       border-left: 3px solid #0d6efd;
       padding-left: 1rem;
       margin-top: 1rem;
     }
+
     .timeline-entry {
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
     }
+
     .timeline-entry i {
       font-size: 1.2rem;
       margin-right: 0.5rem;
     }
+
     .timeline-entry time {
       font-size: 0.9rem;
       color: #6c757d;
       margin-left: 0.25rem;
     }
+
+    footer {
+      background-color: #0d3c75 !important;
+    }
+
+    @media (max-width: 576px) {
+      body {
+        font-size: 1.05rem;
+      }
+      .page-header {
+        padding: 15px;
+      }
+      .table-responsive {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('dashboard') }}">Kilifi Legal Portal</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='case management.jpeg') }}" alt="Kilifi Legal Logo">
+        Kilifi Legal Portal
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('welcome') }}">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" href="{{ url_for('my_cases') }}">My Cases</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('documents') }}">Documents</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+          {% if current_user.role == 'admin' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_messages') }}">Admin Messages</a></li>
+          {% endif %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
         </ul>
       </div>
@@ -61,14 +140,14 @@
   </nav>
 
   <!-- Page Header -->
-  <div class="container mt-4 text-center">
-    <h2 class="fs-3">My Filed Cases</h2>
-    <p class="text-muted fs-6">View, filter, and manage your legal cases</p>
-    <a href="{{ url_for('add_case') }}" class="btn btn-success">Add New Case</a>
+  <div class="container page-header text-center">
+    <h2 class="fw-bold text-dark">My Filed Cases</h2>
+    <p class="text-muted">View, filter, and manage your legal cases with ease</p>
+    <a href="{{ url_for('add_case') }}" class="btn btn-success mt-2">Add New Case</a>
   </div>
 
   <!-- Filter Section -->
-  <div class="container mt-3">
+  <div class="container mt-4">
     <form method="GET" class="row g-2">
       <div class="col-12 col-md-2"><input type="text" name="search" class="form-control" placeholder="Case Number"></div>
       <div class="col-12 col-md-2">
@@ -84,9 +163,10 @@
       <div class="col-12 col-md-2"><input type="text" name="parties" class="form-control" placeholder="Parties"></div>
       <div class="col-12 col-md-2"><input type="text" name="case_type" class="form-control" placeholder="Case Type"></div>
       <div class="col-12 col-md-2"><input type="text" name="department" class="form-control" placeholder="Department"></div>
-      <div class="col-12 col-md-3"><input type="date" name="date_filed" class="form-control" placeholder="Date Filed"></div>
+      <div class="col-12 col-md-3"><input type="date" name="date_filed" class="form-control"></div>
       <div class="col-12 col-md-3"><button type="submit" class="btn btn-outline-primary w-100">Filter</button></div>
     </form>
+
     <div class="row mt-3 g-2">
       <div class="col-12 col-md-3"><a href="{{ url_for('export_pdf') }}" class="btn btn-outline-danger w-100">Export PDF</a></div>
       <div class="col-12 col-md-3"><a href="{{ url_for('export_excel') }}" class="btn btn-outline-success w-100">Export Excel</a></div>
@@ -97,8 +177,8 @@
   <div class="container mt-4">
     {% if cases %}
     <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-dark">
+      <table class="table table-hover shadow-sm">
+        <thead>
           <tr>
             <th>Case Number</th>
             <th>Type</th>
@@ -113,6 +193,9 @@
             <th>Paused</th>
             <th>Resumed</th>
             <th>Documents</th>
+            <th>Next Hearing</th>
+            <th>Hearing Venue</th>
+            <th>Update Hearing</th>
             <th>Edit</th>
           </tr>
         </thead>
@@ -143,10 +226,54 @@
                 </div>
               </form>
             </td>
+            <td>
+              {% if case.next_hearing_date %}
+                {{ case.next_hearing_date.strftime('%Y-%m-%d %H:%M') }}
+              {% else %}
+                <span class="text-muted">Not set</span>
+              {% endif %}
+            </td>
 
+            <td>
+              {% if case.hearing_mode == 'Virtual' %}
+                {% if case.court_link %}
+                  <span class="badge bg-info">
+                    <a href="{{ case.court_link }}" target="_blank" class="text-white text-decoration-none">
+                      {{ case.link_title or 'Join Virtual Courtroom' }}
+                    </a>
+                  </span>
+                {% else %}
+                  <span class="text-muted">No court link provided</span>
+                {% endif %}
+              {% elif case.hearing_mode == 'Physical' %}
+                {% if case.department %}
+                  <span class="badge bg-secondary">
+                    {{ case.department }}
+                    <a href="https://www.google.com/maps/search/{{ case.department | urlencode }}" target="_blank" class="text-white text-decoration-none ms-2">
+                      <i class="bi bi-geo-alt-fill"></i> Map
+                    </a>
+                  </span>
+                {% else %}
+                  <span class="text-muted">No venue provided</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">No hearing mode set</span>
+              {% endif %}
+            </td>
+
+
+            <td>
+              <form method="POST" action="{{ url_for('update_hearing', case_id=case.id) }}">
+                <div class="input-group input-group-sm">
+                  <input type="datetime-local" name="next_hearing_date" class="form-control" required>
+                  <button type="submit" class="btn btn-outline-primary">Update</button>
+                </div>
+              </form>
+            </td>
 
             <td><a href="{{ url_for('edit_case', case_id=case.id) }}" class="btn btn-sm btn-warning">Edit</a></td>
           </tr>
+
           <tr>
             <td colspan="14">
               <div class="timeline">
@@ -184,47 +311,73 @@
     {% endif %}
   </div>
 
-<!-- Footer -->
-<footer class="bg-dark text-white mt-auto pt-3 pb-2 small" style="font-size: 0.85rem;">
-  <div class="container">
-    <div class="row gy-2 text-center text-md-start">
-      <!-- Legal Support -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Legal Support</h6>
-        <p class="mb-1">📞 Advice Line: +254 700 111 222</p>
-        <p class="mb-1">📧 Email: legal@kilifilegal.com</p>
+  <!-- Bulk Scheduling -->
+  <div class="container mt-5 mb-5">
+    <h4 class="fs-5 text-center mb-3">Bulk Schedule Hearings</h4>
+    <form method="POST" action="{{ url_for('bulk_schedule') }}">
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Select</th>
+              <th>Case Number</th>
+              <th>Type</th>
+              <th>Next Hearing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for case in cases %}
+            <tr>
+              <td><input type="checkbox" name="case_ids" value="{{ case.id }}"></td>
+              <td>{{ case.case_number }}</td>
+              <td>{{ case.case_type }}</td>
+              <td>{{ case.next_hearing_date.strftime('%Y-%m-%d %H:%M') if case.next_hearing_date else '—' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
 
-      <!-- IT Support -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Technical Support</h6>
-        <p class="mb-1">📞 Helpdesk: +254 700 333 444</p>
-        <p class="mb-1">📧 Email: support@kilifilegal.com</p>
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-6">
+          <label for="bulk_date" class="form-label">Set Hearing Date for Selected Cases</label>
+          <input type="datetime-local" name="bulk_date" class="form-control" required>
+        </div>
+        <div class="col-12 col-md-6 text-md-start text-center">
+          <button type="submit" class="btn btn-primary w-100 w-md-auto mt-2 mt-md-0">Schedule Hearings</button>
+        </div>
       </div>
-
-      <!-- Location -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Office Location</h6>
-        <p class="mb-1">📍 Kilifi Plaza, 3rd Floor</p>
-        <p class="mb-1">Beside Equity Bank, Kilifi Town</p>
-        <p class="mb-1">County Attorney's Office</p>
-      </div>
-    </div>
-
-    <hr class="border-light my-3">
-
-    <div class="row text-center">
-      <div class="col-12">
-        <p class="mb-1">&copy; 2025 Kilifi Legal Portal. All rights reserved.</p>
-        <p>
-          <a href="#" class="text-white text-decoration-none me-2">Privacy Policy</a> |
-          <a href="#" class="text-white text-decoration-none ms-2">Terms of Service</a>
-        </p>
-      </div>
-    </div>
+    </form>
   </div>
-</footer>
 
+  <!-- Footer -->
+  <footer class="text-white mt-auto pt-3 pb-2 small" style="font-size: 0.85rem;">
+    <div class="container">
+      <div class="row gy-2 text-center text-md-start">
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Legal Support</h6>
+          <p>+254 700 111 222</p>
+          <p>legal@kilifilegal.com</p>
+        </div>
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Technical Support</h6>
+          <p>+254 700 333 444</p>
+          <p>support@kilifilegal.com</p>
+        </div>
+        <div class="col-12 col-md-4">
+          <h6 class="text-uppercase fw-bold mb-2">Office Location</h6>
+          <p>📍 Kilifi Plaza, 3rd Floor</p>
+          <p>Beside Equity Bank, Kilifi Town</p>
+        </div>
+      </div>
+
+      <hr class="border-light my-3">
+      <div class="text-center">
+        <p class="mb-1">&copy; 2025 Kilifi Legal Portal. All rights reserved.</p>
+        <p><a href="#" class="text-white text-decoration-none">Privacy Policy</a> | <a href="#" class="text-white text-decoration-none">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

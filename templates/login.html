@@ -8,82 +8,191 @@
 
   <style>
     body {
-      background-color: #ffffff;
+      background-color: #0d3c75;
       font-family: 'Segoe UI', sans-serif;
-    }
-    .card {
-      border: none;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .card-header {
-      background-color: #0d3c75; /* Dark blue accent */
-      color: #ffffff;
-      text-align: center;
-    }
-    .form-label {
       color: #0d3c75;
-      font-weight: 500;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
     }
+
+    .login-card {
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      width: 90%;
+      max-width: 460px;
+      padding: 30px 25px;
+      box-sizing: border-box;
+    }
+
+    .login-card h3 {
+      color: #0d3c75;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .login-card p {
+      text-align: center;
+      color: #6c757d;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .login-logo {
+      display: block;
+      margin: 15px auto 25px;
+      width: 130px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #0d3c75;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid #d1d3e2;
+      padding: 10px;
+    }
+
+    .form-control:focus {
+      border-color: #0d3c75;
+      box-shadow: 0 0 0 0.15rem rgba(13, 60, 117, 0.25);
+    }
+
     .btn-primary {
       background-color: #0d3c75;
       border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 500;
+      transition: 0.3s ease;
     }
+
     .btn-primary:hover {
       background-color: #0b3263;
+      transform: translateY(-1px);
     }
-    a {
+
+    .footer-text {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .footer-text a {
       color: #0d3c75;
       text-decoration: none;
+      font-weight: 500;
     }
-    a:hover {
+
+    .footer-text a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-height: 750px) {
+      body {
+        align-items: flex-start;
+        overflow-y: auto;
+        padding: 20px 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .login-card {
+        padding: 25px 20px;
+      }
+      .login-logo {
+        width: 110px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .login-card {
+        width: 92%;
+        padding: 20px 18px;
+      }
+      .login-card h3 {
+        font-size: 22px;
+      }
+      .login-card p {
+        font-size: 14px;
+      }
+      .login-logo {
+        width: 95px;
+      }
     }
   </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
 
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h4>Login to Your Account</h4>
-          </div>
-          <div class="card-body">
+<body>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                  {{ message }}
-                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-              {% endfor %}
-            {% endwith %}
+  <div class="login-card">
+    <h3>Login to Your Account</h3>
+    <p>Welcome back to Kilifi Legal — access your dashboard below.</p>
+    <img src="{{ url_for('static', filename='case management.jpeg') }}" alt="Case Management Logo" class="login-logo">
 
-            <form method="POST" class="needs-validation" novalidate>
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Login</button>
-              </div>
-            </form>
-
-            <div class="mt-3 text-center">
-              <a href="{{ url_for('register') }}">Don't have an account? Register</a>
-            </div>
-
-          </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+      {% endfor %}
+    {% endwith %}
+
+    {% if locked_user %}
+      <div class="alert alert-warning text-center">
+        Account locked due to multiple failed attempts.<br>
+        <a href="{{ url_for('reset_password_token', token=locked_user) }}" class="text-decoration-none" style="color: #0d3c75;">Click here to reset your password.</a>
+      </div>
+    {% endif %}
+
+    <form method="POST" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" name="password" required>
+          <span class="input-group-text" onclick="toggleVisibility('password')">👁️</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <div class="footer-text">
+      <div class="mt-2">
+        <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+      </div>
+      <div class="mt-2">
+        Don't have an account?
+        <a href="{{ url_for('register') }}">Register</a>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleVisibility(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+
 </body>
 </html>

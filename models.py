@@ -11,6 +11,11 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(50), nullable=True)
+    profile_picture = db.Column(db.String(255), nullable=True)
+    failed_attempts = db.Column(db.Integer, default=0)
+    is_locked = db.Column(db.Boolean, default=False)
+    reset_token = db.Column(db.String(100), nullable=True)
+    token_expiry = db.Column(db.DateTime, nullable=True)
 
     contact_messages = db.relationship(
         'ContactMessage',
@@ -29,27 +34,32 @@ class User(db.Model, UserMixin):
 
 
 class Case(db.Model):
-    __tablename__ = 'casess'  # Updated table name
+    __tablename__ = 'casess'
 
     id = db.Column(db.Integer, primary_key=True)
     case_number = db.Column(db.String(100), unique=True, nullable=False)
     case_type = db.Column(db.String(100), nullable=False)
     parties = db.Column(db.Text, nullable=False)
     date_filed = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default='Ongoing')  # Ongoing, Paused, Resumed, Closed
+    status = db.Column(db.String(50), default='Ongoing')
     handled_by = db.Column(db.String(150))
 
-    # New columns
     department = db.Column(db.String(150), nullable=True)
     descriptions = db.Column(db.Text, nullable=True)
     records = db.Column(db.Text, nullable=True)
 
-    # Status history timestamps
     date_closed = db.Column(db.DateTime, nullable=True)
     date_paused = db.Column(db.DateTime, nullable=True)
     date_resumed = db.Column(db.DateTime, nullable=True)
 
+    next_hearing_date = db.Column(db.DateTime, nullable=True)  # ✅ New field
+
     documents = db.relationship('Document', backref='case', lazy=True)
+    hearing_mode = db.Column(db.String(20))  # 'Physical' or 'Virtual'
+    court_link = db.Column(db.String(255))   # actual URL
+    link_title = db.Column(db.String(100))   # optional display name
+
+
 
 '''
 class Case(db.Model):

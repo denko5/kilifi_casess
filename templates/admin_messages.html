@@ -31,10 +31,10 @@
     </div>
   </div>
 <form method="POST" action="{{ url_for('delete_messages') }}">
-  <div class="mt-5">
-    <h4 class="mb-3 text-danger">Manage Messages</h4>
+<div class="mt-5">
+  <h4 class="mb-3 text-danger">Manage Messages</h4>
+  <form method="POST" action="{{ url_for('delete_messages') }}">
     <button type="submit" class="btn btn-sm btn-danger mb-3">Delete Selected</button>
-
     {% for msg in messages %}
       <div class="card mb-3 shadow-sm {% if msg.reply %}border-success{% else %}border-warning{% endif %}">
         <div class="card-body">
@@ -50,7 +50,7 @@
             <p><strong>Reply:</strong> {{ msg.reply }}</p>
             <p><small>Replied at {{ msg.replied_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
           {% else %}
-            <!-- Inline Reply Form -->
+            <!-- Inline Reply Form OUTSIDE the delete form -->
             <form method="POST" action="{{ url_for('reply_message', msg_id=msg.id) }}">
               <div class="mb-2">
                 <textarea name="reply" class="form-control" rows="3" placeholder="Type your reply here..." required></textarea>
@@ -66,7 +66,8 @@
         </div>
       </div>
     {% endfor %}
-  </div>
-</form>
+  </form>
+</div>
+
 
 {% endblock %}

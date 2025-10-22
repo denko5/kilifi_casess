@@ -1,23 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome to Kilifi Case Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Welcome to Kilifi Legal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+  <style>
+    /* ---------- Base ---------- */
+    :root{
+      --accent: #0d6efd; /* blue accent for links/buttons */
+      --muted: #6c757d;
+      --card-bg: #ffffff;
+      --soft-bg: #f3f6fb;
+      --legal-gold: #ffc107;
+      --glass: rgba(255,255,255,0.75);
+      --elev-1: 0 6px 18px rgba(12, 34, 63, 0.08);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+      background-color: var(--soft-bg);
+      color: #212529;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    a { text-decoration: none; }
+
+    /* ---------- Hero ---------- */
+    .hero{
+      position:relative;
+      min-height:78vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:3rem 1rem;
+      color: #fff;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45));
+      z-index:1;
+      backdrop-filter: blur(3px);
+    }
+
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background-image: url('{{ url_for("static", filename="legal advisory.jpg") }}');
+      background-size:cover;
+      background-position:center;
+      filter: brightness(0.85) saturate(95%);
+      z-index:0;
+      transform: scale(1.03);
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+      max-width:980px;
+      padding:1.5rem;
+      border-radius:12px;
+      backdrop-filter: blur(2px);
+    }
+
+    .hero h1{
+      font-weight:700;
+      font-size: clamp(1.8rem, 3.6vw, 3.0rem);
+      margin-bottom:0.5rem;
+      letter-spacing:0.2px;
+      text-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    }
+
+    .hero p.lead{
+      font-size:1.05rem;
+      margin-bottom:1.25rem;
+      opacity:0.95;
+    }
+
+    .btn-register{
+      background: var(--legal-gold);
+      color:#000;
+      border: none;
+      box-shadow: var(--elev-1);
+    }
+    .btn-login{
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 6px 16px rgba(6,30,60,0.12);
+    }
+
+    /* Logos */
+    .logo-left, .logo-right{
+      position: absolute;
+      top: 18px;
+      width: 72px;
+      height: auto;
+      z-index:12;
+      object-fit:cover;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      background: var(--glass);
+      padding:6px;
+    }
+    .logo-left{ left:18px; border-radius:5px; }
+    .logo-right{ right:18px; border-radius:50%; }
+
+    @media (max-width:640px){
+      .logo-left, .logo-right{ width:52px; top: 12px; }
+    }
+
+    /* ---------- Sections & reveal ---------- */
+    section.section{
+      padding: 3rem 1rem;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all 700ms cubic-bezier(.2,.9,.2,1);
+    }
+    section.section.visible{
+      transform: translateY(0);
+      opacity:1;
+    }
+
+    .container-lg {
+      max-width: 1100px;
+    }
+
+    h2.section-title{
+      font-size:1.5rem;
+      font-weight:700;
+      margin-bottom:1rem;
+      letter-spacing:0.2px;
+    }
+    p.lead-muted{
+      color: var(--muted);
+      margin-bottom:1.75rem;
+      font-size:1rem;
+    }
+
+    /* ---------- Services Cards ---------- */
+    .service-card{
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+      border-radius:12px;
+      padding:1.5rem;
+      height:100%;
+      box-shadow: 0 8px 26px rgba(13, 38, 74, 0.06);
+      transition: transform .28s ease, box-shadow .28s ease;
+      border: 1px solid rgba(13,38,74,0.03);
+    }
+    .service-card:hover{
+      transform: translateY(-8px);
+      box-shadow: 0 18px 48px rgba(13, 38, 74, 0.12);
+    }
+    .service-card h5{ margin-bottom:0.5rem; font-weight:600; }
+    .service-card p{ color:var(--muted); font-size:0.95rem; }
+
+    /* ---------- Testimonials ---------- */
+    .testimonial-carousel{
+      max-width:960px;
+      margin:0 auto;
+    }
+    .testimonial-card{
+      background: var(--card-bg);
+      border-radius:12px;
+      padding:2rem;
+      max-width:720px;
+      margin:auto;
+      box-shadow: 0 10px 38px rgba(2,18,40,0.06);
+      border: 1px solid rgba(10,30,80,0.03);
+      text-align:center;
+    }
+    .testimonial-card img{
+      width:92px;
+      height:92px;
+      object-fit:cover;
+      border-radius:50%;
+      margin-bottom:0.8rem;
+      border:4px solid #fff;
+      box-shadow: 0 8px 22px rgba(8,20,40,0.08);
+    }
+    .testimonial-card h5{ margin-bottom:0.25rem; font-weight:700; }
+    .testimonial-card p{ color:var(--muted); font-size:0.98rem; }
+
+    /* Carousel controls - make them visible and high-contrast */
+    .carousel-control-prev, .carousel-control-next{
+      width:48px;
+      height:48px;
+      top:50%;
+      transform:translateY(-50%);
+      border-radius:50%;
+      background: rgba(3,37,65,0.08);
+      backdrop-filter: blur(4px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: all .18s ease;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .carousel-control-prev:hover, .carousel-control-next:hover{
+      background: rgba(3,37,65,0.12);
+      transform:translateY(-50%) scale(1.03);
+    }
+
+    /* custom arrow icons (SVG) */
+    .carousel-control-prev svg, .carousel-control-next svg{
+      width:20px;
+      height:20px;
+      fill: #04263f;
+      filter: drop-shadow(0 2px 6px rgba(3,37,65,0.18));
+    }
+
+    /* slow slide transition */
+    .carousel .carousel-item {
+      transition: transform 1s ease-in-out;
+    }
+
+    /* ---------- Footer ---------- */
+    footer.site-footer{
+      padding:1.8rem 1rem;
+      text-align:center;
+      color:var(--muted);
+      font-size:0.95rem;
+      background: transparent;
+    }
+
+    /* small helpers */
+    .muted-small { color:var(--muted); font-size:0.95rem; }
+  </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <div class="container">
-        <h1>Welcome to Kilifi Case Manager</h1>
-        <p>Your trusted platform for managing legal cases and documents.</p>
-        <div class="buttons">
-            <a href="{{ url_for('register') }}" class="btn">Register</a>
-            <a href="{{ url_for('login') }}" class="btn">Login</a>
-        </div>
+<body>
+
+  <!-- Logos (kept outside hero so they float) -->
+  <img src="{{ url_for('static', filename='case management.jpeg') }}" class="logo-left" alt="Case Icon">
+  <img src="{{ url_for('static', filename='logo.png') }}" class="logo-right" alt="Kilifi Badge">
+
+  <!-- HERO -->
+  <header class="hero" role="banner" aria-label="Hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <div class="hero-content container-lg text-center">
+      <h1>Welcome to Kilifi Legal</h1>
+      <p class="lead">Your trusted portal for managing legal cases, documents, and justice workflows across Kilifi County.</p>
+
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a href="{{ url_for('register') }}" class="btn btn-register btn-lg">Register</a>
+        <a href="{{ url_for('login') }}" class="btn btn-login btn-lg">Login</a>
+      </div>
     </div>
+  </header>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- About -->
+  <section class="section bg-white">
+    <div class="container container-lg">
+      <h2 class="section-title">About the Office of the County Attorney</h2>
+      <p class="lead-muted">
+        Kilifi Legal is an initiative by the Office of the County Attorney to streamline legal workflows across Kilifi County.
+        Our mission is to uphold justice, transparency, and legal integrity through digital case management, secure document handling, and advisory services.
+      </p>
+    </div>
+  </section>
 
+  <!-- Services -->
+  <section class="section">
+    <div class="container container-lg">
+      <h2 class="section-title">Our Legal Services</h2>
+      <p class="muted-small">Comprehensive services designed for citizens, legal officers, and administrators.</p>
+
+      <div class="row g-4 mt-3">
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="service-card h-100">
+            <h5>Case Filing</h5>
+            <p>Submit and register new legal cases with structured intake forms and reference numbers for easy tracking.</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="service-card h-100">
+            <h5>Document Upload</h5>
+            <p>Securely upload evidence and correspondence with role-based access and audit trails.</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="service-card h-100">
+            <h5>Hearing Schedule</h5>
+            <p>Track upcoming hearings, calendar integration, and receive timely notifications for stakeholders.</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="service-card h-100">
+            <h5>Legal Advisory</h5>
+            <p>Access expert advice from county officers with a secure messaging channel for case-related queries.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel -->
+  <section class="section bg-light">
+    <div class="container container-lg">
+      <h2 class="section-title text-center mb-4">What Our Legal Team Says</h2>
+
+      <!-- carousel: slower interval, pause on hover -->
+      <div id="testimonialCarousel" class="carousel slide testimonial-carousel" data-bs-ride="carousel" data-bs-interval="7000" data-bs-pause="hover" aria-label="Testimonials carousel">
+        <div class="carousel-inner">
+
+          <div class="carousel-item active">
+            <div class="testimonial-card">
+              <img src="{{ url_for('static', filename='County Attorney.jpg') }}" alt="County Attorney">
+              <h5>County Attorney</h5>
+              <p>"Kilifi Legal is a game-changer for justice delivery. It brings transparency and speed to our legal processes."</p>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="testimonial-card">
+              <img src="{{ url_for('static', filename='county solicitor.jpeg') }}" alt="County Solicitor">
+              <h5>County Solicitor</h5>
+              <p>"This platform empowers our legal officers with the tools they need to serve the public better."</p>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="testimonial-card">
+              <img src="{{ url_for('static', filename='rehema.jpg') }}" alt="Rehema">
+              <h5>Rehema – Legal Principal</h5>
+              <p>"As a lawyer, I find Kilifi Legal intuitive and powerful. It simplifies case tracking and record keeping digital."</p>
+            </div>
+          </div>
+
+        </div> <!-- /.carousel-inner -->
+
+        <!-- Custom visible controls (SVG icons) -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev" aria-label="Previous testimonial">
+          <!-- left chevron -->
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next" aria-label="Next testimonial">
+          <!-- right chevron -->
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+          </svg>
+        </button>
+
+      </div> <!-- /.carousel -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container container-lg">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-md-start mb-2 mb-md-0">
+          <small>&copy; <strong>Kilifi Legal</strong> — Office of the County Attorney. All rights reserved.</small>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <small class="muted-small">Contact: <a href="mailto:info@kilifilegal.go.ke">info@kilifilegal.go.ke</a> • Phone: 0768684521</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ---------- Reveal sections on scroll ---------- */
+    (function(){
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // reveal once
+          }
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll('section.section').forEach(s => observer.observe(s));
+    }());
+
+    /* ---------- Improve carousel accessibility / ensure desired behavior ---------- */
+    (function(){
+      const carouselEl = document.getElementById('testimonialCarousel');
+      if (carouselEl) {
+        // Bootstrap carousel instance: set options programmatically (redundant with data attributes but ensures behavior)
+        const bsCarousel = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
+          interval: 7000,
+          ride: 'carousel',
+          pause: 'hover',
+          touch: true
+        });
+
+        // reduce touch/keyboard accidental fast slides: debounce keyboard arrows (optional)
+        let lastKey = 0;
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            const now = Date.now();
+            if (now - lastKey < 550) {
+              e.preventDefault();
+              return;
+            }
+            lastKey = now;
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

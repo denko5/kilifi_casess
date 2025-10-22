@@ -5,45 +5,214 @@
   <title>Kilifi Legal Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
+    /* Base Styling */
     body {
-      background-color: #f8f9fa;
-      font-size: 1rem;
+      background-color: #f3f6fa;
+      font-family: 'Segoe UI', sans-serif;
+      color: #222;
     }
-    @media (max-width: 576px) {
-      body {
-        font-size: 1.05rem;
-      }
+
+    /* Navbar */
+    .navbar {
+      background-color: #0d3c75;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    .navbar-brand img {
+      height: 40px;
+      width: 40px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 8px;
+    }
+    .nav-link {
+      color: #ffffff !important;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #ffc107 !important;
+    }
+
+    /* Headings */
+    h2, h3, h4 {
+      color: #0d3c75;
+      font-weight: 600;
+    }
+
+    /* Dashboard Cards */
     .card-summary {
       text-align: center;
-      padding: 20px;
+      padding: 25px 15px;
+      border: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+    .card-summary:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    .card-summary h4 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    .card-summary p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    /* Table */
+    .table {
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #fff;
+    }
+    thead.table-dark th {
+      background-color: #0d3c75 !important;
+      color: #fff;
+    }
+    tbody tr:hover {
+      background-color: #f0f4fa;
+    }
+
+    /* Contact Section */
+    form textarea {
+      resize: none;
+    }
+    button.btn-primary {
+      background-color: #0d3c75;
+      border: none;
+      transition: 0.3s ease;
+    }
+    button.btn-primary:hover {
+      background-color: #0b3263;
+    }
+
+    /* Collapsible Messages */
+    .card.border-success {
+      border-left: 5px solid #28a745 !important;
+    }
+    .card.border-warning {
+      border-left: 5px solid #ffc107 !important;
+    }
+
+    /* Footer */
+  /* Footer Styling */
+.footer {
+  background-color: #0d3c75;
+  color: #f8f9fa;
+}
+
+.footer h5, .footer h6 {
+  font-weight: 600;
+}
+
+.footer a {
+  color: #f8f9fa;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.footer ul {
+  padding-left: 0;
+}
+
+.footer ul li {
+  list-style: none;
+  margin-bottom: 0.4rem;
+}
+
+.urgent-badge {
+  background-color: #dc3545;
+  color: #fff;
+  position: relative;
+  animation: pulseGlow 1.5s infinite;
+  box-shadow: 0 0 0 rgba(220, 53, 69, 0.7);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+    /* Responsive Tweaks */
+    @media (max-width: 576px) {
+      .navbar-brand img {
+        height: 35px;
+        width: 35px;
+      }
+      .card-summary {
+        padding: 20px 10px;
+      }
+      body {
+        font-size: 1rem;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('dashboard') }}">Kilifi Legal Portal</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='case management.jpeg') }}" alt="Kilifi Legal Logo">
+        Kilifi Legal Portal
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('welcome') }}">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('my_cases') }}">My Cases</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('documents') }}">Documents</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+          
+          <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Profile</a></li> -->
 
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
           {% if current_user.role == 'admin' %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_messages') }}">Admin Messages</a></li>
           {% endif %}
-
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="rounded-circle bg-warning text-dark fw-bold d-flex justify-content-center align-items-center me-2" style="width: 36px; height: 36px;">
+      {{ user.full_name.split()[0][0] }}{{ user.full_name.split()[-1][0] }}
+    </div>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+    <li><a class="dropdown-item" href="{{ url_for('profile') }}">View Profile</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+  </ul>
+</li>
+          <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li> -->
         </ul>
       </div>
     </div>
@@ -51,44 +220,116 @@
 
   <!-- Welcome -->
   <div class="container mt-4 text-center">
-    <h2 class="fs-3">Welcome, {{ current_user.full_name }}</h2>
-    <p class="text-muted fs-6">Your legal dashboard overview</p>
+    <h2>Welcome, {{ current_user.full_name }}</h2>
+    <p class="text-muted">Your legal dashboard overview</p>
   </div>
 
   <!-- Summary Cards -->
   <div class="container mt-4">
     <div class="row g-3">
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="card card-summary bg-primary text-white">
+        <div class="card-summary bg-primary text-white">
           <h4>Total Cases</h4>
           <p>{{ total_cases }}</p>
         </div>
       </div>
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="card card-summary bg-warning text-dark">
+        <div class="card-summary bg-warning text-dark">
           <h4>Ongoing Cases</h4>
           <p>{{ ongoing_cases }}</p>
         </div>
       </div>
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="card card-summary bg-success text-white">
+        <div class="card-summary bg-success text-white">
           <h4>Closed Cases</h4>
           <p>{{ closed_cases }}</p>
         </div>
       </div>
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="card card-summary bg-info text-white">
+        <div class="card-summary bg-info text-white">
           <h4>Documents</h4>
           <p>{{ total_documents }}</p>
         </div>
       </div>
     </div>
   </div>
+  
+
+ <!-- Upcoming Hearings -->
+<div class="container mt-5">
+  <h4 class="mb-4 text-primary fw-bold">Upcoming Hearings</h4>
+  {% if upcoming_hearings %}
+    <ul class="list-group shadow-sm rounded-3">
+          {% for case in upcoming_hearings %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1 text-dark">{{ case.next_hearing_date.strftime('%A, %d %B %Y %H:%M') }}</h6>
+                <p class="mb-0"><strong>Case:</strong> {{ case.case_number }}</p>
+                <p class="mb-0"><strong>Type:</strong> {{ case.case_type }}</p>
+                <p class="mb-0"><strong>Parties:</strong> {{ case.parties }}</p>
+              </div>
+
+              <div class="text-end">
+                {% set time_diff = (case.next_hearing_date - now).total_seconds() %}
+                {% if time_diff <= 86400 %}
+                   <span class="badge urgent-badge px-3 py-2" title="This hearing is within 24 hours and requires immediate attention.">
+                    Urgent
+                    <span class="countdown" data-time="{{ case.next_hearing_date.isoformat() }}"></span>
+                  </span>
+                {% elif time_diff <= 604800 %}
+                  <span class="badge bg-warning text-dark px-3 py-2" title="This hearing is scheduled within the next 7 days.">
+                    <i class="bi bi-clock-fill me-1"></i>Soon
+                  </span>
+                {% else %}
+                  <span class="badge bg-secondary text-white px-3 py-2" title="This hearing is scheduled more than a week from now.">
+                    <i class="bi bi-calendar-event-fill me-1"></i>Scheduled
+                  </span>
+                {% endif %}
+
+                {% if case.hearing_mode == 'Virtual' %}
+                  <div class="mt-2" title="Click to join the virtual courtroom">
+                    <strong class="text-muted">Court Link:</strong>
+                    {% if case.court_link %}
+                      <a href="{{ case.court_link }}" target="_blank" class="text-decoration-none text-primary fw-semibold ms-1">
+                        <i class="bi bi-camera-video-fill me-1 text-info"></i>{{ case.link_title or 'Join Virtual Courtroom' }}
+                      </a>
+                    {% else %}
+                      <span class="text-muted ms-1">No court link provided</span>
+                    {% endif %}
+                  </div>
+                {% elif case.hearing_mode == 'Physical' %}
+                  <div class="mt-2" title="Click to view location on Google Maps">
+                    <strong class="text-muted">Venue:</strong>
+                    {% if case.department %}
+                      <span class="text-dark ms-1">{{ case.department }}</span>
+                      <a href="https://www.google.com/maps/search/{{ case.department | urlencode }}" target="_blank" class="ms-2 text-decoration-none text-success">
+                        <i class="bi bi-geo-alt-fill me-1"></i>Map
+                      </a>
+                    {% else %}
+                      <span class="text-muted ms-1">No venue provided</span>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <div class="mt-2">
+                    <span class="text-muted">No hearing mode set</span>
+                  </div>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+
+  {% else %}
+    <div class="alert alert-secondary mt-3 shadow-sm">No upcoming hearings scheduled.</div>
+  {% endif %}
+  <a href="{{ url_for('export_hearings_pdf') }}" class="btn btn-outline-primary mt-4">Export Hearings PDF</a>
+</div>
+
 
   <!-- Recent Cases Table -->
   <div class="container mt-5">
-    <h3 class="fs-4">Recent Cases</h3>
-    <div class="table-responsive">
+    <h3>Recent Cases</h3>
+    <div class="table-responsive shadow-sm rounded">
       <table class="table table-bordered table-hover">
         <thead class="table-dark">
           <tr>
@@ -124,8 +365,8 @@
 
   <!-- Contact Form -->
   <div class="container mt-5">
-    <h4 class="fs-5">Need Help? Contact Support</h4>
-    <form method="POST" action="/contact">
+    <h4>Need Help? Contact Support</h4>
+    <form method="POST" action="/contact" class="shadow-sm p-4 bg-white rounded">
       <div class="mb-3">
         <label for="message" class="form-label">Your Message</label>
         <textarea class="form-control" name="message" rows="4" placeholder="Describe your issue..."></textarea>
@@ -134,96 +375,112 @@
     </form>
   </div>
 
-<!-- Toggle Button -->
-<div class="container mt-5">
-  <h4 class="fs-5">Support Messages</h4>
-  <button class="btn btn-outline-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#userMessages" aria-expanded="false" aria-controls="userMessages">
-    View Submitted Messages
-  </button>
+  <!-- User Messages Section -->
+  <div class="container mt-5 mb-4">
+    <h4>Support Messages</h4>
+    <button class="btn btn-outline-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#userMessages" aria-expanded="false">
+      View Submitted Messages
+    </button>
 
-  <!-- Collapsible Message Section -->
-  <div class="collapse" id="userMessages">
-    <form method="POST" action="{{ url_for('delete_user_messages') }}">
-      <button type="submit" class="btn btn-sm btn-danger mb-3">Delete Selected</button>
+    <div class="collapse" id="userMessages">
+      <form method="POST" action="{{ url_for('delete_user_messages') }}">
+        <button type="submit" class="btn btn-sm btn-danger mb-3">Delete Selected</button>
 
-      {% for msg in current_user.contact_messages %}
+        {% for msg in current_user.contact_messages %}
         <div class="card mb-3 shadow-sm {% if msg.reply %}border-success{% else %}border-warning{% endif %}">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
-              <h6 class="mb-0"><strong>Sent:</strong> {{ msg.submitted_at.strftime('%Y-%m-%d %H:%M') }}</h6>
+              <h6><strong>Sent:</strong> {{ msg.submitted_at.strftime('%Y-%m-%d %H:%M') }}</h6>
               <input type="checkbox" name="delete_ids" value="{{ msg.id }}">
             </div>
             <hr class="my-2">
-
             <p><strong>Your Message:</strong> {{ msg.message }}</p>
 
             {% if msg.reply %}
               <div class="mt-3 p-3 bg-light border-start border-success border-3 rounded">
-                <p class="mb-1"><strong>Admin Reply:</strong> {{ msg.reply }}</p>
+                <p><strong>Admin Reply:</strong> {{ msg.reply }}</p>
                 <p class="text-muted mb-0"><small>Replied on {{ msg.replied_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
               </div>
             {% else %}
               <p class="text-muted mt-3">⏳ Awaiting admin response...</p>
             {% endif %}
-
-            <!-- Single Delete Button -->
-            <form method="POST" action="{{ url_for('delete_user_message', msg_id=msg.id) }}" class="mt-3">
-              <button type="submit" class="btn btn-sm btn-outline-danger">Delete This Message</button>
-            </form>
           </div>
         </div>
-      {% endfor %}
+        {% endfor %}
 
-      {% if current_user.contact_messages|length == 0 %}
-        <div class="alert alert-info">You haven't submitted any messages yet.</div>
-      {% endif %}
-    </form>
-  </div>
-</div>
-
-
-
-<!-- Footer -->
-<footer class="bg-dark text-white mt-auto pt-3 pb-2 small" style="font-size: 0.85rem;">
-  <div class="container">
-    <div class="row gy-2 text-center text-md-start">
-      <!-- Legal Support -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Legal Support</h6>
-        <p class="mb-1">📞 Advice Line: +254 700 111 222</p>
-        <p class="mb-1">📧 Email: legal@kilifilegal.com</p>
-      </div>
-
-      <!-- IT Support -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Technical Support</h6>
-        <p class="mb-1">📞 Helpdesk: +254 700 333 444</p>
-        <p class="mb-1">📧 Email: support@kilifilegal.com</p>
-      </div>
-
-      <!-- Location -->
-      <div class="col-12 col-md-4">
-        <h6 class="text-uppercase fw-bold mb-2">Office Location</h6>
-        <p class="mb-1">📍 Kilifi Plaza, 3rd Floor</p>
-        <p class="mb-1">Beside Equity Bank, Kilifi Town</p>
-        <p class="mb-1">County Attorney's Office</p>
-      </div>
+        {% if current_user.contact_messages|length == 0 %}
+        <div class="alert alert-info shadow-sm">You haven't submitted any messages yet.</div>
+        {% endif %}
+      </form>
     </div>
+  </div>
 
-    <hr class="border-light my-3">
-
-    <div class="row text-center">
-      <div class="col-12">
-        <p class="mb-1">&copy; 2025 Kilifi Legal Portal. All rights reserved.</p>
-        <p>
-          <a href="#" class="text-white text-decoration-none me-2">Privacy Policy</a> |
-          <a href="#" class="text-white text-decoration-none ms-2">Terms of Service</a>
+  <!-- Footer -->
+<!-- Footer -->
+<footer class="footer mt-auto py-5">
+  <div class="container">
+    <div class="row gy-4">
+      
+      <!-- Logo & About -->
+      <div class="col-md-4">
+        <h5 class="fw-bold text-white mb-3">Kilifi Legal Portal</h5>
+        <p class="small text-light">
+          Connecting justice and innovation — your trusted digital legal platform in Kilifi County.
         </p>
       </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4">
+        <h6 class="fw-bold text-white mb-3">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="welcome.html">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Legal Services</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-4">
+        <h6 class="fw-bold text-white mb-3">Contact Information</h6>
+        <p class="small mb-1">Email: <a href="mailto:support@kilifilegal.com">support@kilifilegal.com</a></p>
+        <p class="small mb-1">Phone: +254 700 333 444</p>
+        <p class="small">Address: Kilifi Plaza, 3rd Floor — Beside Equity Bank</p>
+      </div>
+
+    </div>
+
+    <hr class="my-4 border-light">
+
+    <div class="text-center small text-light">
+      <p class="mb-0">&copy; 2025 Kilifi Legal Portal. All Rights Reserved.</p>
+      <a href="#" class="text-light text-decoration-none me-2">Privacy Policy</a> |
+      <a href="#" class="text-light text-decoration-none ms-2">Terms of Service</a>
     </div>
   </div>
 </footer>
 
+<script>
+  function updateCountdowns() {
+    const countdowns = document.querySelectorAll('.countdown');
+    countdowns.forEach(el => {
+      const targetTime = new Date(el.dataset.time);
+      const now = new Date();
+      const diff = targetTime - now;
+
+      if (diff > 0) {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        el.textContent = ` - ${hours}h ${minutes}m left`;
+      } else {
+        el.textContent = ` - Now`;
+      }
+    });
+  }
+
+  setInterval(updateCountdowns, 60000); // Update every minute
+  updateCountdowns(); // Initial call
+</script>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
