@@ -56,7 +56,9 @@ app.config['SECRET_KEY'] = 'your_strong_secret_key'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 raw_db_url = os.environ.get('DATABASE_URL', '')
-app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url.replace('mysql://', 'mysql+pymysql://') if raw_db_url else 'sqlite:///fallback.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url.replace('mysql://', 'mysql+pymysql://') if raw_db_url else 'sqlite:///fallback.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url if raw_db_url else 'sqlite:///fallback.db'
+
 
 
 
