@@ -163,25 +163,46 @@
     .service-card h5{ margin-bottom:0.5rem; font-weight:600; }
     .service-card p{ color:var(--muted); font-size:0.95rem; }
 
+    /* Center all content inside service cards */
+    .service-card {
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 0 0 transparent;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Hover effect */
+    .service-card:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    /* Image styling */
     .service-image {
       width: 100%;
       max-height: 150px;
       object-fit: contain;
-      opacity: 0;
-      transform: translateX(-100px);
-      transition: all 0.8s ease-out;
-}
+    }
 
-.service-image.slide-in-left {
-  transform: translateX(0);
-  opacity: 1;
-}
+    /* Special styling for grayscale card */
+    .grayscale-card {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      color: #333;
+    }
 
-.service-image.slide-in-right {
-  transform: translateX(0);
-  opacity: 1;
-}
+    .grayscale-card h5 {
+      color: #222;
+    }
 
+    .grayscale-card p {
+      color: #444;
+    }
 
     /* ---------- Testimonials ---------- */
     .testimonial-carousel{
@@ -287,47 +308,53 @@
       </p>
     </div>
   </section>
+
 <!-- Services -->
 <section class="section">
   <div class="container container-lg">
-    <h2 class="section-title">Our Legal Services</h2>
-    <p class="muted-small">Comprehensive services designed for citizens, legal officers, and administrators.</p>
+    <h2 class="section-title text-center">Our Legal Services</h2>
+    <p class="muted-small text-center">Comprehensive services designed for citizens, legal officers, and administrators.</p>
 
     <div class="row g-4 mt-3">
+      <!-- Case Filing (Black & White style) -->
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='case-filing.png') }}" class="service-image" alt="Case Filing Graphic">
-          <h5>Case Filing</h5>
+        <div class="service-card h-100 text-center grayscale-card">
+          <img src="{{ url_for('static', filename='case-filing.png') }}" class="service-image mx-auto d-block" alt="Case Filing Graphic">
+          <h5 class="mt-3">Case Filing</h5>
           <p>Submit and register new legal cases with structured intake forms and reference numbers for easy tracking.</p>
         </div>
       </div>
 
+      <!-- Document Upload -->
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='document-upload.jpeg') }}" class="service-image" alt="Document Upload Graphic">
-          <h5>Document Upload</h5>
+        <div class="service-card h-100 text-center">
+          <img src="{{ url_for('static', filename='document-upload.jpeg') }}" class="service-image mx-auto d-block" alt="Document Upload Graphic">
+          <h5 class="mt-3">Document Upload</h5>
           <p>Securely upload evidence and correspondence with role-based access and audit trails.</p>
         </div>
       </div>
 
+      <!-- Hearing Schedule -->
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='hearing-schedule.jpeg') }}" class="service-image" alt="Hearing Schedule Graphic">
-          <h5>Hearing Schedule</h5>
+        <div class="service-card h-100 text-center">
+          <img src="{{ url_for('static', filename='hearing-schedule.jpeg') }}" class="service-image mx-auto d-block" alt="Hearing Schedule Graphic">
+          <h5 class="mt-3">Hearing Schedule</h5>
           <p>Track upcoming hearings, calendar integration, and receive timely notifications for stakeholders.</p>
         </div>
       </div>
 
+      <!-- Legal Advisory -->
       <div class="col-12 col-md-6 col-lg-3">
-        <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='legal-advisory.jpeg') }}" class="service-image" alt="Legal Advisory Graphic">
-          <h5>Legal Advisory</h5>
+        <div class="service-card h-100 text-center">
+          <img src="{{ url_for('static', filename='legal-advisory.jpeg') }}" class="service-image mx-auto d-block" alt="Legal Advisory Graphic">
+          <h5 class="mt-3">Legal Advisory</h5>
           <p>Access expert advice from county officers with a secure messaging channel for case-related queries.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 
   <!-- Testimonials Carousel -->
