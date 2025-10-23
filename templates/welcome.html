@@ -163,6 +163,26 @@
     .service-card h5{ margin-bottom:0.5rem; font-weight:600; }
     .service-card p{ color:var(--muted); font-size:0.95rem; }
 
+    .service-image {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 0.8s ease-out;
+}
+
+.service-image.slide-in-left {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.service-image.slide-in-right {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+
     /* ---------- Testimonials ---------- */
     .testimonial-carousel{
       max-width:960px;
@@ -267,44 +287,48 @@
       </p>
     </div>
   </section>
+<!-- Services -->
+<section class="section">
+  <div class="container container-lg">
+    <h2 class="section-title">Our Legal Services</h2>
+    <p class="muted-small">Comprehensive services designed for citizens, legal officers, and administrators.</p>
 
-  <!-- Services -->
-  <section class="section">
-    <div class="container container-lg">
-      <h2 class="section-title">Our Legal Services</h2>
-      <p class="muted-small">Comprehensive services designed for citizens, legal officers, and administrators.</p>
-
-      <div class="row g-4 mt-3">
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="service-card h-100">
-            <h5>Case Filing</h5>
-            <p>Submit and register new legal cases with structured intake forms and reference numbers for easy tracking.</p>
-          </div>
+    <div class="row g-4 mt-3">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="service-card h-100">
+          <img src="{{ url_for('static', filename='images/case-filing.png') }}" class="service-image" alt="Case Filing Graphic">
+          <h5>Case Filing</h5>
+          <p>Submit and register new legal cases with structured intake forms and reference numbers for easy tracking.</p>
         </div>
+      </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="service-card h-100">
-            <h5>Document Upload</h5>
-            <p>Securely upload evidence and correspondence with role-based access and audit trails.</p>
-          </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="service-card h-100">
+          <img src="{{ url_for('static', filename='images/document-upload.png') }}" class="service-image" alt="Document Upload Graphic">
+          <h5>Document Upload</h5>
+          <p>Securely upload evidence and correspondence with role-based access and audit trails.</p>
         </div>
+      </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="service-card h-100">
-            <h5>Hearing Schedule</h5>
-            <p>Track upcoming hearings, calendar integration, and receive timely notifications for stakeholders.</p>
-          </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="service-card h-100">
+          <img src="{{ url_for('static', filename='images/hearing-schedule.png') }}" class="service-image" alt="Hearing Schedule Graphic">
+          <h5>Hearing Schedule</h5>
+          <p>Track upcoming hearings, calendar integration, and receive timely notifications for stakeholders.</p>
         </div>
+      </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="service-card h-100">
-            <h5>Legal Advisory</h5>
-            <p>Access expert advice from county officers with a secure messaging channel for case-related queries.</p>
-          </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="service-card h-100">
+          <img src="{{ url_for('static', filename='images/legal-advisory.png') }}" class="service-image" alt="Legal Advisory Graphic">
+          <h5>Legal Advisory</h5>
+          <p>Access expert advice from county officers with a secure messaging channel for case-related queries.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Testimonials Carousel -->
   <section class="section bg-light">
@@ -419,5 +443,23 @@
       }
     })();
   </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll('.service-image');
+
+    const revealOnScroll = () => {
+      images.forEach((img, index) => {
+        const rect = img.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          img.classList.add(index % 2 === 0 ? 'slide-in-left' : 'slide-in-right');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // trigger on load
+  });
+</script>
+
 </body>
 </html>

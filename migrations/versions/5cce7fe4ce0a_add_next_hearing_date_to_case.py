@@ -30,3 +30,4 @@ def downgrade():
         batch_op.drop_column('next_hearing_date')
 
     # ### end Alembic commands ###
+    

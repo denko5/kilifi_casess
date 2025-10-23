@@ -59,9 +59,6 @@ raw_db_url = os.environ.get('DATABASE_URL', '')
 # app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url.replace('mysql://', 'mysql+pymysql://') if raw_db_url else 'sqlite:///fallback.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url if raw_db_url else 'sqlite:///fallback.db'
 
-
-
-
 # File upload config
 UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'jpg', 'png'}
