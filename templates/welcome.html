@@ -170,18 +170,24 @@
       opacity: 0;
       transform: translateX(-100px);
       transition: all 0.8s ease-out;
-}
+    }
 
-.service-image.slide-in-left {
-  transform: translateX(0);
-  opacity: 1;
-}
+    .service-image.slide-in-left {
+      transform: translateX(0);
+      opacity: 1;
+    }
 
-.service-image.slide-in-right {
-  transform: translateX(0);
-  opacity: 1;
-}
+    .service-image.slide-in-right {
+      transform: translateX(0);
+      opacity: 1;
+    }
 
+    /* small fade in when lazy-loaded (for new loader) */
+    .lazy-loaded {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: opacity .45s ease, transform .45s ease;
+    }
 
     /* ---------- Testimonials ---------- */
     .testimonial-carousel{
@@ -259,8 +265,9 @@
 <body>
 
   <!-- Logos (kept outside hero so they float) -->
-  <img src="{{ url_for('static', filename='case management.jpeg') }}" class="logo-left" alt="Case Icon">
-  <img src="{{ url_for('static', filename='logo.png') }}" class="logo-right" alt="Kilifi Badge">
+  <!-- placeholder tiny gif as initial src so browsers reserve layout, real path in data-src -->
+  <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='case management.jpeg') }}" loading="lazy" class="logo-left" alt="Case Icon" width="72" height="72">
+  <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='logo.png') }}" loading="lazy" class="logo-right" alt="Kilifi Badge" width="72" height="72">
 
   <!-- HERO -->
   <header class="hero" role="banner" aria-label="Hero">
@@ -296,7 +303,7 @@
     <div class="row g-4 mt-3">
       <div class="col-12 col-md-6 col-lg-3">
         <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='case-filing.png') }}" class="service-image" alt="Case Filing Graphic">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='case-filing.png') }}" loading="lazy" class="service-image" alt="Case Filing Graphic" width="600" height="300">
           <h5>Case Filing</h5>
           <p>Submit and register new legal cases with structured intake forms and reference numbers for easy tracking.</p>
         </div>
@@ -304,7 +311,7 @@
 
       <div class="col-12 col-md-6 col-lg-3">
         <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='document-upload.jpeg') }}" class="service-image" alt="Document Upload Graphic">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='document-upload.jpeg') }}" loading="lazy" class="service-image" alt="Document Upload Graphic" width="600" height="300">
           <h5>Document Upload</h5>
           <p>Securely upload evidence and correspondence with role-based access and audit trails.</p>
         </div>
@@ -312,7 +319,7 @@
 
       <div class="col-12 col-md-6 col-lg-3">
         <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='hearing-schedule.jpeg') }}" class="service-image" alt="Hearing Schedule Graphic">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='hearing-schedule.jpeg') }}" loading="lazy" class="service-image" alt="Hearing Schedule Graphic" width="600" height="300">
           <h5>Hearing Schedule</h5>
           <p>Track upcoming hearings, calendar integration, and receive timely notifications for stakeholders.</p>
         </div>
@@ -320,7 +327,7 @@
 
       <div class="col-12 col-md-6 col-lg-3">
         <div class="service-card h-100">
-          <img src="{{ url_for('static', filename='legal-advisory.jpeg') }}" class="service-image" alt="Legal Advisory Graphic">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='legal-advisory.jpeg') }}" loading="lazy" class="service-image" alt="Legal Advisory Graphic" width="600" height="300">
           <h5>Legal Advisory</h5>
           <p>Access expert advice from county officers with a secure messaging channel for case-related queries.</p>
         </div>
@@ -341,7 +348,7 @@
 
           <div class="carousel-item active">
             <div class="testimonial-card">
-              <img src="{{ url_for('static', filename='County Attorney.jpg') }}" alt="County Attorney">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='County Attorney.jpg') }}" loading="lazy" alt="County Attorney" width="92" height="92">
               <h5>County Attorney</h5>
               <p>"Kilifi Legal is a game-changer for justice delivery. It brings transparency and speed to our legal processes."</p>
             </div>
@@ -349,7 +356,7 @@
 
           <div class="carousel-item">
             <div class="testimonial-card">
-              <img src="{{ url_for('static', filename='county solicitor.jpeg') }}" alt="County Solicitor">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='county solicitor.jpeg') }}" loading="lazy" alt="County Solicitor" width="92" height="92">
               <h5>County Solicitor</h5>
               <p>"This platform empowers our legal officers with the tools they need to serve the public better."</p>
             </div>
@@ -357,7 +364,7 @@
 
           <div class="carousel-item">
             <div class="testimonial-card">
-              <img src="{{ url_for('static', filename='rehema.jpg') }}" alt="Rehema">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ url_for('static', filename='rehema.jpg') }}" loading="lazy" alt="Rehema" width="92" height="92">
               <h5>Rehema – Legal Principal</h5>
               <p>"As a lawyer, I find Kilifi Legal intuitive and powerful. It simplifies case tracking and record keeping digital."</p>
             </div>
@@ -461,5 +468,53 @@
   });
 </script>
 
+  <!-- ===== New lazy loader script (appended; does not remove any original function) ===== -->
+  <script>
+    (function(){
+      // Uses IntersectionObserver to replace data-src -> src when images enter viewport.
+      // Select images that have data-src (we left all original functions intact).
+      const lazyTargets = document.querySelectorAll('img[data-src]');
+
+      if ('IntersectionObserver' in window && lazyTargets.length) {
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              const realSrc = img.getAttribute('data-src');
+              if (realSrc) {
+                // swap src, allow browser to fetch
+                img.src = realSrc;
+                // remove data-src to avoid re-processing
+                img.removeAttribute('data-src');
+
+                // once loaded, add class that matches your existing animations
+                img.addEventListener('load', () => {
+                  // prefer existing slide-in classes; if none, add lazy-loaded
+                  if (!img.classList.contains('slide-in-left') && !img.classList.contains('slide-in-right')) {
+                    img.classList.add('lazy-loaded');
+                  } else {
+                    // Ensure full visibility for images that use slide-in classes
+                    img.classList.add('lazy-loaded');
+                  }
+                }, { once: true });
+              }
+              observer.unobserve(img);
+            }
+          });
+        }, { rootMargin: '150px 0px', threshold: 0.01 });
+
+        lazyTargets.forEach(img => imgObserver.observe(img));
+      } else {
+        // Fallback for old browsers: load all images immediately
+        lazyTargets.forEach(img => {
+          const realSrc = img.getAttribute('data-src');
+          if (realSrc) {
+            img.src = realSrc;
+            img.removeAttribute('data-src');
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
